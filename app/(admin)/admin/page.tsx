@@ -17,7 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from "recharts"
+import { AreaChart, Area, XAxis, YAxis, BarChart, Bar } from "recharts"
 
 const systemStats = [
   {
@@ -163,7 +163,6 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[250px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={requestsData}>
                   <defs>
                     <linearGradient id="fillRequests" x1="0" y1="0" x2="0" y2="1">
@@ -187,7 +186,6 @@ export default function AdminPage() {
                     strokeWidth={2}
                   />
                 </AreaChart>
-              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
         </Card>
@@ -199,14 +197,12 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[250px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={userActivityData}>
                   <XAxis dataKey="hour" tickLine={false} axisLine={false} tickMargin={8} />
                   <YAxis tickLine={false} axisLine={false} tickMargin={8} />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <Bar dataKey="active" fill="var(--chart-2)" radius={[4, 4, 0, 0]} />
                 </BarChart>
-              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
         </Card>

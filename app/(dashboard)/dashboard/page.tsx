@@ -19,7 +19,7 @@ import {
   ChartTooltip, 
   ChartTooltipContent 
 } from "@/components/ui/chart"
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer } from "recharts"
+import { AreaChart, Area, XAxis, YAxis } from "recharts"
 
 const stats = [
   {
@@ -143,7 +143,6 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfig} className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="fillRequests" x1="0" y1="0" x2="0" y2="1">
@@ -172,7 +171,6 @@ export default function DashboardPage() {
                     strokeWidth={2}
                   />
                 </AreaChart>
-              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
         </Card>

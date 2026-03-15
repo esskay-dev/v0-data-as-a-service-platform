@@ -19,14 +19,14 @@ export function LandingHeader() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 md:flex">
+          <Link href="/get-started" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Get Started
+          </Link>
           <Link href="/docs" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Documentation
           </Link>
           <Link href="/pricing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Pricing
-          </Link>
-          <Link href="/blog" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Blog
           </Link>
         </nav>
 
@@ -59,6 +59,13 @@ export function LandingHeader() {
         <div className="border-t bg-background px-4 py-4 md:hidden">
           <nav className="mb-4 flex flex-col gap-3">
             <Link 
+              href="/get-started" 
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Get Started
+            </Link>
+            <Link 
               href="/docs" 
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               onClick={() => setMobileMenuOpen(false)}
@@ -71,13 +78,6 @@ export function LandingHeader() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
-            </Link>
-            <Link 
-              href="/blog" 
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Blog
             </Link>
           </nav>
           <div className="flex flex-col gap-2">

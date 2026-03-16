@@ -1,18 +1,11 @@
 "use client"
 
 import { Bell, Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { ThemeToggle } from "@/components/theme-toggle"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
@@ -42,47 +35,100 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
-      <div className="relative flex-1 max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Search datasets, APIs..." className="pl-9 bg-muted/50 border-0 focus-visible:ring-1" />
+    <header style={{
+      height: "60px",
+      display: "flex",
+      alignItems: "center",
+      gap: "16px",
+      padding: "0 24px",
+      borderBottom: "1px solid var(--border-subtle)",
+      background: "var(--bg-base)",
+      flexShrink: 0,
+    }}>
+      {/* Search */}
+      <div style={{ position: "relative", flex: 1, maxWidth: "320px" }}>
+        <Search size={14} style={{
+          position: "absolute", left: "10px", top: "50%",
+          transform: "translateY(-50%)", color: "var(--text-tertiary)",
+          pointerEvents: "none",
+        }} />
+        <input
+          className="input"
+          placeholder="Search datasets, APIs..."
+          style={{ paddingLeft: "32px", height: "34px", fontSize: "13.5px" }}
+        />
       </div>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "4px" }}>
         <ThemeToggle />
 
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-4 w-4" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
-        </Button>
+        {/* Notifications */}
+        <button style={{
+          position: "relative", width: "34px", height: "34px",
+          borderRadius: "var(--radius-md)", border: "none",
+          background: "transparent", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "var(--text-secondary)", transition: "all 0.12s ease",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-muted)"; e.currentTarget.style.color = "var(--text-primary)" }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)" }}
+        >
+          <Bell size={16} />
+          <span style={{
+            position: "absolute", top: "7px", right: "7px",
+            width: "6px", height: "6px", borderRadius: "50%",
+            background: "var(--brand-500)",
+            border: "1.5px solid var(--bg-base)",
+          }} />
+        </button>
 
+        {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-                  {user?.initials || "??"}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
+            <button style={{
+              display: "flex", alignItems: "center", gap: "8px",
+              padding: "4px 8px 4px 4px",
+              borderRadius: "var(--radius-md)", border: "1px solid transparent",
+              background: "transparent", cursor: "pointer",
+              transition: "all 0.12s ease",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-muted)"; e.currentTarget.style.borderColor = "var(--border-default)" }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "transparent" }}
+            >
+              <div style={{
+                width: "28px", height: "28px", borderRadius: "var(--radius-md)",
+                background: "var(--brand-100)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: "11px", fontWeight: 600, color: "var(--brand-700)",
+                fontFamily: "var(--font-display)",
+              }}>
+                {user?.initials || "??"}
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.2 }}>
+                  {user?.name?.split(" ")[0] || "..."}
+                </div>
+                <div style={{ fontSize: "11px", color: "var(--text-tertiary)", lineHeight: 1.2 }}>Free plan</div>
+              </div>
+            </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">{user?.name || "Loading..."}</p>
-                <p className="text-xs text-muted-foreground">{user?.email || ""}</p>
+          <DropdownMenuContent align="end" style={{ width: "220px" }}>
+            <DropdownMenuLabel style={{ fontWeight: "normal" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                <span style={{ fontSize: "13.5px", fontWeight: 500 }}>{user?.name || "Loading..."}</span>
+                <span style={{ fontSize: "12px", color: "var(--text-tertiary)" }}>{user?.email}</span>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/settings">Settings</Link>
+              <Link href="/dashboard/settings" style={{ fontSize: "13.5px" }}>Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/pricing">Upgrade Plan</Link>
+              <Link href="/pricing" style={{ fontSize: "13.5px" }}>Upgrade plan</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive cursor-pointer">
-              Sign Out
+            <DropdownMenuItem onClick={handleSignOut} style={{ fontSize: "13.5px", color: "var(--accent-rose)", cursor: "pointer" }}>
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

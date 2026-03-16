@@ -1,157 +1,214 @@
+"use client"
+
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Database, Upload, Key, BarChart3, ArrowRight, ArrowUpRight, Zap, Clock, CheckCircle2, AlertCircle } from "lucide-react"
+import { Upload, Key, BarChart3, Database, ArrowUpRight, ArrowRight, Clock, CheckCircle2, AlertCircle, Zap, Activity } from "lucide-react"
 
 const stats = [
-  { label: "Total Datasets", value: "3", change: "+1 this month", trend: "up", icon: Database, href: "/dashboard/datasets" },
-  { label: "API Calls (30d)", value: "2,341", change: "+18% vs last month", trend: "up", icon: Zap, href: "/dashboard/analytics" },
-  { label: "Active API Keys", value: "2", change: "1 expiring soon", trend: "neutral", icon: Key, href: "/dashboard/api-keys" },
-  { label: "Avg Response Time", value: "38ms", change: "-4ms vs last week", trend: "up", icon: BarChart3, href: "/dashboard/analytics" },
+  { label: "Total datasets",    value: "3",      change: "+1 this month",     trend: "up",  icon: Database,  href: "/dashboard/datasets" },
+  { label: "API calls (30d)",   value: "2,341",  change: "+18% vs last month",trend: "up",  icon: Zap,       href: "/dashboard/analytics" },
+  { label: "Active API keys",   value: "2",      change: "1 expiring soon",   trend: "warn",icon: Key,       href: "/dashboard/api-keys" },
+  { label: "Avg response time", value: "38ms",   change: "−4ms vs last week", trend: "up",  icon: Activity,  href: "/dashboard/analytics" },
 ]
 
-const recentDatasets = [
-  { name: "users_2024.csv", rows: "1,250", endpoint: "/api/v1/datasets/users", status: "active", updatedAt: "2 hours ago" },
-  { name: "products_catalog.json", rows: "856", endpoint: "/api/v1/datasets/products", status: "active", updatedAt: "1 day ago" },
-  { name: "transactions_q1.csv", rows: "12,400", endpoint: "/api/v1/datasets/transactions", status: "processing", updatedAt: "5 mins ago" },
+const datasets = [
+  { name: "users_2024.csv",        rows: "1,250",  endpoint: "/api/v1/datasets/users",        status: "active",     updated: "2h ago" },
+  { name: "products_catalog.json", rows: "856",    endpoint: "/api/v1/datasets/products",     status: "active",     updated: "1d ago" },
+  { name: "transactions_q1.csv",   rows: "12,400", endpoint: "/api/v1/datasets/transactions", status: "processing", updated: "5m ago" },
 ]
 
-const recentActivity = [
-  { message: "Dataset 'users_2024.csv' updated", time: "2h ago", type: "success" },
-  { message: "New API key created", time: "1d ago", type: "info" },
-  { message: "Rate limit warning on /api/v1/datasets/products", time: "2d ago", type: "warning" },
-  { message: "Dataset 'transactions_q1.csv' upload started", time: "5m ago", type: "info" },
+const activity = [
+  { msg: "Dataset 'users_2024.csv' updated",                    time: "2h ago",  type: "success" },
+  { msg: "New API key created",                                  time: "1d ago",  type: "info" },
+  { msg: "Rate limit warning on /api/v1/datasets/products",      time: "2d ago",  type: "warning" },
+  { msg: "Dataset 'transactions_q1.csv' upload started",         time: "5m ago",  type: "info" },
 ]
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div style={{ display: "flex", flexDirection: "column", gap: "28px", fontFamily: "var(--font-body)" }}>
+
+      {/* Page header */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
-          <p className="text-muted-foreground mt-1">Welcome back! Here&apos;s what&apos;s happening with your data.</p>
+          <h1 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "22px", fontWeight: 700,
+            letterSpacing: "-0.03em",
+            color: "var(--text-primary)",
+            marginBottom: "4px",
+          }}>Overview</h1>
+          <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
+            Welcome back — here's what's happening with your data platform.
+          </p>
         </div>
-        <Button asChild className="gap-2">
-          <Link href="/dashboard/upload">
-            <Upload className="h-4 w-4" />
-            Upload Dataset
-          </Link>
-        </Button>
+        <Link href="/dashboard/upload" style={{ textDecoration: "none" }}>
+          <button className="btn btn-primary" style={{ height: "36px", fontSize: "13.5px" }}>
+            <Upload size={14} />
+            Upload dataset
+          </button>
+        </Link>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
         {stats.map((stat) => (
-          <Link key={stat.label} href={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <stat.icon className="h-5 w-5 text-primary" />
+          <Link key={stat.label} href={stat.href} style={{ textDecoration: "none" }}>
+            <div className="card card-hover" style={{ padding: "20px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                <div style={{
+                  width: "36px", height: "36px",
+                  background: "var(--bg-subtle)",
+                  border: "1px solid var(--border-default)",
+                  borderRadius: "var(--radius-md)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <stat.icon size={16} style={{ color: "var(--brand-500)" }} />
+                </div>
+                {stat.trend === "up" && (
+                  <div style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "11.5px", color: "#059669", fontWeight: 500 }}>
+                    <ArrowUpRight size={12} /> up
                   </div>
-                  {stat.trend === "up" && <ArrowUpRight className="h-4 w-4 text-green-500" />}
-                </div>
-                <div className="mt-4">
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground mt-0.5">{stat.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{stat.change}</p>
-                </div>
-              </CardContent>
-            </Card>
+                )}
+                {stat.trend === "warn" && (
+                  <span className="badge badge-amber">{stat.change}</span>
+                )}
+              </div>
+              <div className="stat-value" style={{ marginBottom: "4px" }}>{stat.value}</div>
+              <div style={{ fontSize: "12.5px", color: "var(--text-secondary)" }}>{stat.label}</div>
+              {stat.trend !== "warn" && (
+                <div style={{ fontSize: "11.5px", color: "var(--text-tertiary)", marginTop: "4px" }}>{stat.change}</div>
+              )}
+            </div>
           </Link>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between pb-4">
+      {/* Datasets + Activity */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "20px" }}>
+
+        {/* Datasets table */}
+        <div className="card" style={{ overflow: "hidden" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border-subtle)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
-              <CardTitle className="text-base font-semibold">Recent Datasets</CardTitle>
-              <CardDescription>Your latest uploaded and active datasets</CardDescription>
+              <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>Recent datasets</div>
+              <div style={{ fontSize: "12px", color: "var(--text-tertiary)", marginTop: "2px" }}>Your latest uploaded data</div>
             </div>
-            <Button variant="ghost" size="sm" asChild className="gap-1 text-xs">
-              <Link href="/dashboard/datasets">View all <ArrowRight className="h-3 w-3" /></Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentDatasets.map((ds) => (
-                <div key={ds.name} className="flex items-center justify-between rounded-lg border bg-muted/30 p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
-                      <Database className="h-4 w-4 text-primary" />
+            <Link href="/dashboard/datasets" style={{ textDecoration: "none" }}>
+              <button className="btn btn-ghost" style={{ fontSize: "12.5px", height: "30px", gap: "4px" }}>
+                View all <ArrowRight size={12} />
+              </button>
+            </Link>
+          </div>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>Endpoint</th>
+                <th>Rows</th>
+                <th>Status</th>
+                <th>Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {datasets.map((ds) => (
+                <tr key={ds.name} style={{ cursor: "pointer" }}>
+                  <td>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <div style={{
+                        width: "30px", height: "30px", flexShrink: 0,
+                        background: "var(--bg-subtle)", border: "1px solid var(--border-default)",
+                        borderRadius: "var(--radius-md)", display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Database size={13} style={{ color: "var(--brand-500)" }} />
+                      </div>
+                      <span style={{ fontWeight: 500, fontSize: "13.5px" }}>{ds.name}</span>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium">{ds.name}</p>
-                      <p className="text-xs text-muted-foreground font-mono mt-0.5">{ds.endpoint}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{ds.rows} rows</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <Badge variant={ds.status === "active" ? "default" : "secondary"} className="text-[10px] px-2 py-0">
+                  </td>
+                  <td>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--text-tertiary)" }}>{ds.endpoint}</span>
+                  </td>
+                  <td style={{ fontSize: "13px" }}>{ds.rows}</td>
+                  <td>
+                    <span className={`badge ${ds.status === "active" ? "badge-green" : "badge-amber"}`}>
                       {ds.status}
-                    </Badge>
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" />{ds.updatedAt}
                     </span>
-                  </div>
-                </div>
+                  </td>
+                  <td>
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12.5px", color: "var(--text-tertiary)" }}>
+                      <Clock size={11} /> {ds.updated}
+                    </div>
+                  </td>
+                </tr>
               ))}
-            </div>
-          </CardContent>
-        </Card>
+            </tbody>
+          </table>
+        </div>
 
-        <Card>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-base font-semibold">Recent Activity</CardTitle>
-            <CardDescription>Latest events on your account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivity.map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  {item.type === "success" ? <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                    : item.type === "warning" ? <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-yellow-500" />
-                    : <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary" />}
-                  <div>
-                    <p className="text-sm">{item.message}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{item.time}</p>
-                  </div>
+        {/* Activity feed */}
+        <div className="card" style={{ overflow: "hidden" }}>
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border-subtle)" }}>
+            <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>Activity</div>
+            <div style={{ fontSize: "12px", color: "var(--text-tertiary)", marginTop: "2px" }}>Latest events</div>
+          </div>
+          <div style={{ padding: "8px 0" }}>
+            {activity.map((item, i) => (
+              <div key={i} style={{
+                display: "flex", alignItems: "flex-start", gap: "12px",
+                padding: "12px 20px",
+                borderBottom: i < activity.length - 1 ? "1px solid var(--border-subtle)" : "none",
+              }}>
+                <div style={{ marginTop: "2px", flexShrink: 0 }}>
+                  {item.type === "success" && <CheckCircle2 size={14} style={{ color: "#059669" }} />}
+                  {item.type === "warning" && <AlertCircle size={14} style={{ color: "#d97706" }} />}
+                  {item.type === "info" && <div className="dot dot-neutral" style={{ marginTop: "2px" }} />}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base font-semibold">Quick Actions</CardTitle>
-          <CardDescription>Common tasks to manage your platform</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Upload a Dataset", icon: Upload, href: "/dashboard/upload", desc: "CSV, JSON, Parquet" },
-              { label: "Create API Key", icon: Key, href: "/dashboard/api-keys", desc: "Manage access" },
-              { label: "View Analytics", icon: BarChart3, href: "/dashboard/analytics", desc: "Usage & performance" },
-              { label: "Read the Docs", icon: Database, href: "/docs", desc: "Guides & API reference" },
-            ].map((action) => (
-              <Link key={action.label} href={action.href}>
-                <div className="flex items-start gap-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors cursor-pointer">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
-                    <action.icon className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{action.label}</p>
-                    <p className="text-xs text-muted-foreground">{action.desc}</p>
-                  </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: "13px", color: "var(--text-primary)", lineHeight: 1.5, marginBottom: "2px" }}>{item.msg}</p>
+                  <p style={{ fontSize: "11.5px", color: "var(--text-tertiary)" }}>{item.time}</p>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      {/* Quick actions */}
+      <div className="card" style={{ overflow: "hidden" }}>
+        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border-subtle)" }}>
+          <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>Quick actions</div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0" }}>
+          {[
+            { label: "Upload a dataset", icon: Upload, href: "/dashboard/upload", desc: "CSV, JSON, Parquet" },
+            { label: "Create API key",    icon: Key,    href: "/dashboard/api-keys", desc: "Manage access" },
+            { label: "View analytics",   icon: BarChart3, href: "/dashboard/analytics", desc: "Usage & performance" },
+            { label: "Read the docs",    icon: Database, href: "/docs", desc: "Guides & reference" },
+          ].map((action, i) => (
+            <Link key={action.label} href={action.href} style={{ textDecoration: "none" }}>
+              <div style={{
+                padding: "20px 24px",
+                borderRight: i < 3 ? "1px solid var(--border-subtle)" : "none",
+                transition: "background 0.12s ease",
+                cursor: "pointer",
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--bg-subtle)"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+              >
+                <div style={{
+                  width: "36px", height: "36px",
+                  background: "var(--bg-muted)", border: "1px solid var(--border-default)",
+                  borderRadius: "var(--radius-md)", display: "flex", alignItems: "center", justifyContent: "center",
+                  marginBottom: "12px",
+                }}>
+                  <action.icon size={16} style={{ color: "var(--brand-500)" }} />
+                </div>
+                <div style={{ fontSize: "13.5px", fontWeight: 500, color: "var(--text-primary)", marginBottom: "2px" }}>{action.label}</div>
+                <div style={{ fontSize: "12px", color: "var(--text-tertiary)" }}>{action.desc}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
